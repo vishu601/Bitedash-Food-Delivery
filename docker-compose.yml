@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: bitedash_db
+      POSTGRES_USER: bitedash_user
+      POSTGRES_PASSWORD: bitedash_password
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8033:8000"
+    environment:
+      - DEBUG=True
+      - DB_NAME=bitedash_db
+      - DB_USER=bitedash_user
+      - DB_PASSWORD=bitedash_password
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

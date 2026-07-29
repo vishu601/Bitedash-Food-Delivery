@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-md border">
+    <h2 class="text-2xl font-bold mb-4">Your Shopping Cart 🛒</h2>
+    
+    {% if cart_items %}
+        <div class="divide-y">
+            {% for item in cart_items %}
+                <div class="py-3 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-lg">{{ item.item.name }}</h4>
+                        <p class="text-gray-500 text-sm">Qty: {{ item.quantity }} × ₹{{ item.item.price }}</p>
+                    </div>
+                    <span class="font-bold text-lg">₹{{ item.subtotal }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-6 border-t pt-4 flex justify-between items-center">
+            <span class="text-xl font-extrabold">Total: ₹{{ total_price }}</span>
+        </div>
+
+        <!-- Checkout Form -->
+        <form action="{% url 'place_order' %}" method="POST" class="mt-6 flex flex-col gap-3">
+            {% csrf_token %}
+            <label class="font-semibold text-gray-700">Delivery Address:</label>
+            <textarea name="address" rows="3" placeholder="Enter your full delivery address..." required class="p-3 border rounded-xl focus:outline-orange-500"></textarea>
+            <button type="submit" class="bg-orange-600 text-white py-3 rounded-xl font-bold hover:bg-orange-700 transition shadow-lg text-center">
+                Place Order Now 🚀
+            </button>
+        </form>
+    {% else %}
+        <p class="text-gray-500 py-8 text-center">Your cart is empty! Add some delicious food from the menu.</p>
+        <a href="{% url 'menu' %}" class="block text-center bg-orange-600 text-white py-2 rounded-xl font-bold mt-4">Go to Menu</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-3xl shadow-lg p-8 border border-gray-100">
+    <div class="text-center">
+        <div class="text-6xl mb-3">🎉</div>
+        <h1 class="text-3xl font-extrabold text-gray-900">Order Placed Successfully!</h1>
+        <p class="text-gray-500 mt-1">Order ID: <span class="font-bold text-orange-600">#{{ order.id }}</span></p>
+    </div>
+
+    <!-- Status Tracker -->
+    <div class="mt-8 border-t border-b py-6 my-6">
+        <div class="flex justify-between items-center mb-4">
+            <span class="font-semibold text-gray-700">Current Status:</span>
+            <span id="order-status" class="bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full font-bold text-sm uppercase tracking-wide">{{ order.status }}</span>
+        </div>
+        <p class="text-gray-600 text-sm"><b>Delivery Address:</b> {{ order.delivery_address }}</p>
+        <p class="text-gray-600 text-sm mt-1"><b>Total Amount:</b> ₹{{ order.total_price }}</p>
+    </div>
+
+    <!-- Live Tracking Map Section -->
+    <div class="bg-gray-100 rounded-2xl p-6 text-center">
+        <h3 class="font-bold text-gray-800 mb-2">📍 Live Delivery Tracking</h3>
+        <p class="text-sm text-gray-500 mb-4">Your delivery partner is on the way to your location.</p>
+        <div class="w-full h-48 bg-orange-50 rounded-xl flex items-center justify-center border-2 border-dashed border-orange-300">
+            <span id="gps-signal" class="text-orange-600 font-bold animate-pulse">
+                📡 Connecting to Live GPS...
+            </span>
+        </div>
+    </div>
+
+    <div class="mt-8 text-center">
+        <a href="{% url 'menu' %}" class="bg-gray-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition">
+            Order More Food 🍔
+        </a>
+    </div>
+</div>
+
+<!-- WebSocket Script for Real-Time Updates -->
+<script>
+    const orderId = "{{ order.id }}";
+    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const trackingSocket = new WebSocket(
+        wsScheme + '://' + window.location.host + '/ws/track/' + orderId + '/'
+    );
+
+    trackingSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        
+        // Update Status on UI
+        if(data.status) {
+            document.getElementById('order-status').innerText = data.status;
+        }
+        
+        // Update GPS Coordinates on UI
+        if(data.latitude && data.longitude) {
+            document.getElementById('gps-signal').innerText = 
+                `📡 Live GPS Active (Lat: ${data.latitude}, Lng: ${data.longitude})`;
+        }
+    };
+
+    trackingSocket.onclose = function(e) {
+        console.error('WebSocket closed unexpectedly');
+    };
+</script>
+{% endblock %}
