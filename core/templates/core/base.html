@@ -3,119 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevOps & Project Dashboard</title>
-    <style>
-        /* Pure page ka background Sky Blue karne ke liye */
-        body {
-            background-color: #87CEEB; /* Sky Blue hex code */
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        /* Main Container setup */
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin-top: 50px;
-            text-align: center;
-        }
-
-        /* Header Style */
-        h1 {
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        p.subtitle {
-            color: #f0f8ff;
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-        }
-
-        /* Dashboard Grid Layout */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            padding: 20px;
-        }
-
-        /* Project Cards Style */
-        .card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            padding: 25px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: left;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .card h2 {
-            margin-top: 0;
-            color: #0076a3;
-            border-bottom: 2px solid #87CEEB;
-            padding-bottom: 10px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            background-color: #4CAF50;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        /* Footer Style */
-        footer {
-            margin-top: auto;
-            padding: 20px;
-            color: #fff;
-            font-size: 0.9rem;
-        }
-    </style>
+    <title>BiteDash - Food Delivery</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
-    <div class="container">
-        <h1>Bhai, Sky Blue Dashboard Ready Hai! 🚀</h1>
-        <p class="subtitle">GitHub Actions Self-Hosted Runner Active & Connected</p>
-
-        <div class="dashboard-grid">
-            <!-- Project 1 Card -->
-            <div class="card">
-                <h2>Bitedash-Food-Delivery</h2>
-                <p>Aapka food delivery application system jo GitHub auto-runner se fully connected hai.</p>
-                <span class="status-badge">Live & Running</span>
-            </div>
-
-            <!-- Project 2 Card -->
-            <div class="card">
-                <h2>KiranaKhata-Pro</h2>
-                <p>Khata management aur devops tracking module automatic background scripts ke saath.</p>
-                <span class="status-badge">Live & Running</span>
-            </div>
+<body class="bg-sky-100 min-h-screen">
+    
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm border-b px-6 py-4 flex justify-between items-center">
+        <a href="{% url 'menu' %}" class="text-2xl font-black text-orange-600">🍔 BiteDash</a>
+        <div class="space-x-4 flex items-center">
+            <a href="{% url 'menu' %}" class="text-gray-700 font-semibold hover:text-orange-600">Menu</a>
+            <a href="{% url 'cart' %}" class="bg-orange-100 text-orange-700 px-4 py-2 rounded-xl font-bold hover:bg-orange-200 transition">🛒 Cart</a>
+            
+            {% if request.user.is_authenticated %}
+                <span class="text-gray-800 font-bold">👋 Hi, {{ request.user.username }}</span>
+                <a href="{% url 'logout' %}" class="text-red-600 font-bold hover:underline">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="bg-orange-600 text-white px-4 py-2 rounded-xl font-bold hover:bg-orange-700 transition">Login</a>
+                <a href="{% url 'signup' %}" class="text-gray-700 font-semibold">Sign Up</a>
+            {% endif %}
         </div>
-    </div>
+    </nav>
 
-    <footer>
-        <p>© 2026 Ubuntu Server Server-Ip-172-31-35-100. All Rights Reserved.</p>
-    </footer>
+    <!-- Main Content -->
+    <main class="py-8 px-4">
+        {% block content %}
+        {% endblock %}
+    </main>
 
 </body>
-</html>
+</html># this change 
