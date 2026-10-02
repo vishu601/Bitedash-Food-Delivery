@@ -1,14 +1,25 @@
 services:
   web:
     build: .
-    ports:
-      - "4500:8000"
+   # ports:
+    #  - "4500:8000"
+    expose:
+      - "8000"
     restart: always
     environment:
       - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydb
     depends_on:
-      - db
-
+      - db 
+  nginx:
+    image: nginx:alpine
+    container_name: bitedash_nginx
+    ports:
+      - "4500:80"  # Bahar se koi port 4500 par aayega, Nginx use pakad lega
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    restart: always
+    depends_on:
+      - web 
   db:
     image: postgres:15-alpine
     restart: always
